@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+   <head>
+      <title>KnockoutJS Value Binding</title>
+      <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"
+         type = "text/javascript"></script>
+   </head>
+
+   <body>
+      <p>Enter your name: 
+         <input data-bind = "value: personName, valueUpdate: 'afterkeydown'" />
+      </p>
+      
+      <p>Your name is : <span data-bind = "text: personName"></span></p>
+
+      <script type = "text/javascript">
+         var myViewModel = {
+            personName: ko.observable('Bob'),
+            personAge: ko.observable(123)
+        };
+        myViewModel.personName.subscribe(function(newValue) {
+            alert("The person's new name is " + newValue);
+        });
+
+        ko.applyBindings(myViewModel);
+
+      </script>
+      
+   </body>
+</html>

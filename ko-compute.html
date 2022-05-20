@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+   <head>
+      <title>KnockoutJS Value Binding - working with drop-down lists</title>
+      <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"
+         type = "text/javascript"></script>
+   </head>
+
+   <body>
+        <p>First value: <input data-bind="value: firstVal, valueUpdate: 'afterkeydown'" /></p>
+        <div data-bind="text: isLengthGreaterThan4"></div>
+
+        <script type = "text/javascript">
+            function MyViewModel() {
+                  var self = this;
+                  self.firstVal =  ko.observable("hitheredddddddddd"),
+                  self.isLengthGreaterThan4 =  ko.computed(function() {
+                     return self.firstVal().length > 8;    
+                  }, self);
+            }
+            ko.applyBindings(new MyViewModel());
+        </script>
+   </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+</head>
+<body>
+    <form>
+        <div data-bind="foreach: options">
+            <div>
+                <input
+                name="test"
+                data-bind=
+                "
+                checkedValue: $data,
+                click: $root.selectOption,
+                checked: $root.selectedOpt,
+                attr: {
+                    value: value
+                }" type="radio">
+                <span data-bind="text: label"></span>
+            </div>
+        </div>
+        <div data-bind="text: totalSurcharge"></div>
+    </form>
+    
+    <script>
+        function RadioOptions(id, value, label, is_default) {
+            var self = this;
+            self.id = id;
+            self.value = value;
+            self.label = label;
+            self.is_default = ko.observable(is_default);   
+        }
+
+        function AppViewModel() {
+            var self = this;
+            self.totals = ko.observable(0); // No initial value
+            self.flag = ko.observable(0);
+
+            self.configOptions = [
+                { id: 1, value: 10, label: "Orange", is_default: false },
+                { id: 2, value: 20, label: "Green", is_default: true },
+                { id: 3, value: 30, label: "Blue", is_default: false }
+            ];
+
+            self.options = ko.observableArray([]);
+            self.configOptions.forEach(elem => {
+                self.options.push(new RadioOptions(elem.id, elem.value, elem.label, elem.is_default));
+            });
+
+            self.totalSurcharge = ko.computed(function() {
+                var total = self.totals();
+                return "The total is: " + total + "$";
+            });
+
+            self.selectedOpt = ko.observable();
+
+            self.selectOption = function(data) {
+                let curr_price = self.flag();
+
+                if(data != self.selectedOpt()) {
+                    ko.utils.arrayForEach(self.options(), function(option) {
+                        option.is_default(data === option);
+                    });
+                    self.totals(curr_price + data.value);
+                    self.flag(curr_price + data.value);
+                }
+                self.selectedOpt(data);
+
+                //important
+                return true;
+            };
+        }
+        
+        ko.applyBindings(new AppViewModel());
+    </script>
+</body>
+</html>

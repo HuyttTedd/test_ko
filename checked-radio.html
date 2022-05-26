@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+</head>
+<body>
+    <div data-bind="text:name"></div>
+    <div data-bind="foreach:answers">
+        <label>
+            <span data-bind="text: name"></span>
+            <input type="radio" name="uniqueQuestionName" data-bind="checkedValue: $data,
+                click: $root.setCorrectAnswer,
+                checked: $root.correctAnswer" />
+        </label>
+        <br />
+    </div>
+
+    <hr/>
+
+    <pre data-bind="text: JSON.stringify(ko.toJS($root), null, 2)"></pre>
+    
+    <script>
+        function Answer(id, name, isRight) {
+            this.id = ko.observable(id);
+            this.name = ko.observable(name);
+            this.isRight = ko.observable(isRight);
+        }
+
+        function Question() {
+            var self = this;
+            this.name = "My Question";
+
+            var i = 0;
+            this.answers = ko.observableArray([
+                new Answer(++i, "Answer 1", false),
+                new Answer(++i, "Answer 2", true),
+                new Answer(++i, "Answer 3", false)
+            ]);
+
+            this.setCorrectAnswer = function(correct) {
+                console.log(self.correctAnswer());
+                console.log(correct);
+                console.log(3);
+                if (correct !== self.correctAnswer()) {
+                    ko.utils.arrayForEach(self.answers(), function(answer) {
+                        answer.isRight(correct === answer);
+                    });
+
+                    self.correctAnswer(correct);
+                }
+                return true;
+            };
+
+            this.correctAnswer = ko.observable();
+
+            this.correctAnswer.subscribe(function(newValue) {
+                console.log("The correct answer to " + this.name + " is now " + this.correctAnswer().name());
+            }, this);
+        }
+
+        var question = new Question();
+        //Set default correct answer just for example
+        // question.correctAnswer(question.answers()[1]);
+        ko.applyBindings(question);
+    </script>
+</body>
+</html>

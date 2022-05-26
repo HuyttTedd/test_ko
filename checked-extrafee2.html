@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+</head>
+<body>
+    <form>
+        <div data-bind="foreach: options">
+            <div>
+                <input name="uniqueQuestionName" data-bind=
+                "
+                checkedValue: $data,
+                click: $root.selectOption,
+                checked: $root.selectedOpt" 
+                type="radio">
+                <span data-bind="text: label"></span>
+            </div>
+        </div>
+        <pre data-bind="text: JSON.stringify(ko.toJS($root), null, 2)"></pre>
+    </form>
+    
+    <script>
+        function AppViewModel() {
+            var self = this;
+            
+            self.options = ko.observableArray([
+                { id: 1, value: 10, label: "Orange", is_default: false },
+                { id: 2, value: 20, label: "Green", is_default: true },
+                { id: 3, value: 30, label: "Blue", is_default: false }
+            ]);
+            self.selectedOpt = ko.observable();
+            
+            self.selectOption = function(correct) {
+                if(correct != self.selectedOpt()) {
+                    
+                }
+                self.selectedOpt(correct);
+                return true;
+            };
+            // self.selectOption = function(correct) {
+            //     if (correct !== self.selectedOpt()) {
+            //     }
+            //     self.selectedOpt(correct);
+            //     return true;
+            // };
+        }
+        
+        ko.applyBindings(new AppViewModel());
+    </script>
+</body>
+</html>
